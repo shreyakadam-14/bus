@@ -18,8 +18,8 @@ def initialize_db():
             dob TEXT NOT NULL,
             age INTEGER NOT NULL,
             gender TEXT NOT NULL,
-            phone TEXT NOT NULL,
-            email TEXT NOT NULL
+            phone TEXT NOT NULL UNIQUE,
+            email TEXT NOT NULL UNIQUE
         )
     """)
 
@@ -35,7 +35,6 @@ def get_next_driver_id():
     row = cursor.fetchone()
 
     next_id = 1 if row[0] is None else row[0] + 1
-
     conn.close()
     return next_id
 
@@ -44,10 +43,17 @@ def insert_driver(name, dob, age, gender, phone, email):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO drivers (name, dob, age, gender, phone, email)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (name, dob, age, gender, phone, email))
+    try:
+        cursor.execute("""
+            INSERT INTO drivers (name, dob, age, gender, phone, email)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (name, dob, age, gender, phone, email))
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        return True, None
+
+    except sqlite3.IntegrityError as e:
+        return False, str(e)
+
+    finally:
+        conn.close()

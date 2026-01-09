@@ -3,26 +3,24 @@ import re
 from datetime import date, datetime
 
 from PyQt5.QtWidgets import (
-    QApplication, QWidget, QLineEdit,
-    QPushButton, QVBoxLayout, QFormLayout,
-    QMessageBox, QComboBox
+    QApplication, QWidget, QLineEdit, QPushButton,
+    QVBoxLayout, QFormLayout, QMessageBox, QComboBox
 )
 
 from database import initialize_db, get_next_driver_id, insert_driver
-
 
 class DriverForm(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Driver Details Form")
-        self.setGeometry(100, 100, 450, 450)
+        self.setGeometry(100, 100, 450, 520)
 
         initialize_db()
         self.init_ui()
         self.load_driver_id()
 
-    # ---------------- UI ----------------
+    # UI
     def init_ui(self):
         form_layout = QFormLayout()
 
@@ -48,6 +46,12 @@ class DriverForm(QWidget):
 
         self.email_input = QLineEdit()
 
+        self.search_phone_input = QLineEdit()
+        self.search_phone_input.setInputMask("0000000000")
+
+        self.submit_btn = QPushButton("Save Driver")
+        self.submit_btn.clicked.connect(self.save_driver)
+
         form_layout.addRow("Driver ID:", self.driver_id_input)
         form_layout.addRow("Full Name:", self.name_input)
         form_layout.addRow("Date of Birth:", self.dob_input)
@@ -56,24 +60,21 @@ class DriverForm(QWidget):
         form_layout.addRow("Phone:", self.phone_input)
         form_layout.addRow("Email ID:", self.email_input)
 
-        self.submit_btn = QPushButton("Save Driver")
-        self.submit_btn.clicked.connect(self.save_driver)
-
         layout = QVBoxLayout()
         layout.addLayout(form_layout)
         layout.addWidget(self.submit_btn)
 
         self.setLayout(layout)
 
-    # ---------------- DRIVER ID ----------------
+    # DRIVER ID
     def load_driver_id(self):
         self.driver_id_input.setText(str(get_next_driver_id()))
 
-    # ---------------- VALIDATIONS ----------------
+    # VALIDATIONS
     def validate_name(self, name):
         if len(name) > 100:
             return False
-        return bool(re.match(r"^[A-Za-z ]+$", name))
+        return bool(re.fullmatch(r"[A-Za-z ]+", name))
 
     def validate_email(self, email):
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$"
@@ -97,14 +98,14 @@ class DriverForm(QWidget):
                 max_days = 30
             elif month in [1, 3, 5, 7, 8, 10, 12]:
                 max_days = 31
-            elif month == 2:
+            else:  # February
                 if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
                     max_days = 29
                 else:
                     max_days = 28
 
             if day < 1 or day > max_days:
-                return False, f"Invalid day for month {month}"
+                return False, "Invalid day for selected month"
 
             age = today.year - year - (
                 (today.month, today.day) < (month, day)
@@ -118,7 +119,7 @@ class DriverForm(QWidget):
         except ValueError:
             return False, "Invalid DOB format (DD-MM-YYYY)"
 
-    # ---------------- LIVE AGE ----------------
+    # LIVE AGE
     def update_age(self):
         dob_text = self.dob_input.text()
 
@@ -127,13 +128,12 @@ class DriverForm(QWidget):
             return
 
         valid, result = self.validate_and_calculate_age(dob_text)
-
         if valid:
             self.age_display.setText(str(result))
         else:
             self.age_display.clear()
 
-    # ---------------- SAVE ----------------
+    # SAVE
     def save_driver(self):
         name = self.name_input.text().strip()
         dob_text = self.dob_input.text().strip()
@@ -146,11 +146,7 @@ class DriverForm(QWidget):
             return
 
         if not self.validate_name(name):
-            QMessageBox.warning(
-                self,
-                "Error",
-                "Name must contain only letters and spaces (max 100 characters)"
-            )
+            QMessageBox.warning(self, "Error", "Name must contain only letters and spaces (max 100 characters)")
             return
 
         valid, result = self.validate_and_calculate_age(dob_text)
@@ -163,31 +159,33 @@ class DriverForm(QWidget):
             return
 
         if not self.validate_phone(phone):
-            QMessageBox.warning(
-                self,
-                "Error",
-                "Phone must be 10 digits and start with 6, 7, 8, or 9"
-            )
+            QMessageBox.warning(self, "Error", "Phone must be 10 digits and start with 6–9")
             return
 
         if not self.validate_email(email):
-            QMessageBox.warning(
-                self,
-                "Error",
-                "Email must be valid and end with .com"
-            )
+            QMessageBox.warning(self, "Error", "Email must be valid and end with .com")
             return
 
         dob_db = datetime.strptime(dob_text, "%d-%m-%Y").strftime("%Y-%m-%d")
 
-        insert_driver(name, dob_db, result, gender, phone, email)
+        success, error = insert_driver(
+            name, dob_db, result, gender, phone, email
+        )
+
+        if not success:
+            if "phone" in error:
+                QMessageBox.warning(self, "Error", "Phone already exists")
+            elif "email" in error:
+                QMessageBox.warning(self, "Error", "Email already exists")
+            else:
+                QMessageBox.warning(self, "Error", "Database error")
+            return
 
         QMessageBox.information(self, "Success", "Driver saved successfully")
-
         self.clear_form()
         self.load_driver_id()
 
-    # ---------------- CLEAR ----------------
+    # CLEAR
     def clear_form(self):
         self.name_input.clear()
         self.dob_input.clear()
@@ -195,7 +193,6 @@ class DriverForm(QWidget):
         self.gender_input.setCurrentIndex(0)
         self.phone_input.clear()
         self.email_input.clear()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
