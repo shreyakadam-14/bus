@@ -1,0 +1,17 @@
+users
+----------------
+user_id INTEGER PRIMARY KEY AUTOINCREMENT
+username TEXT UNIQUE
+password TEXT
+role TEXT
+
+username: admin
+password: admin123
+role: admin
+
+drivers
+----------------
+driver_id INTEGER PRIMARY KEY AUTOINCREMENT
+name TEXT
+phone TEXT
+license_no TEXT
