@@ -162,7 +162,7 @@ class SchoolManagementPage(QWidget):
         
         # Page header
         header_label = QLabel("🏫 School Management")
-        header_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
+        header_label.setFont(QFont("Arial", 20, QFont.Bold))
         header_label.setStyleSheet("color: #2c3e50;")
         main_layout.addWidget(header_label)
         
@@ -189,7 +189,7 @@ class SchoolManagementPage(QWidget):
         
         # Add status label at bottom
         self.status_label = QLabel("Ready")
-        self.status_label.setFont(QFont("Segoe UI", 9))
+        self.status_label.setFont(QFont("Arial", 9))
         self.status_label.setStyleSheet("color: #7f8c8d;")
         main_layout.addWidget(self.status_label)
 
@@ -422,8 +422,9 @@ class SchoolListTab(QWidget):
         """View details of selected school"""
         school = self.get_selected_school()
         if school:
-            dialog = SchoolDetailsDialog(school)
-            dialog.exec_()
+            #dialog = SchoolDetailsDialog(school)
+            #dialog.exec_()
+            print(f"View details for: {school}") 
         else:
             QMessageBox.warning(self, "No Selection", 
                               "Please select a school first")
@@ -458,8 +459,9 @@ class SchoolListTab(QWidget):
         """View contract of selected school"""
         school = self.get_selected_school()
         if school:
-            dialog = ContractDetailsDialog(school)
-            dialog.exec_()
+            #dialog = ContractDetailsDialog(school)
+            #dialog.exec_()
+            print(f"View details for: {school}") 
         else:
             QMessageBox.warning(self, "No Selection", 
                               "Please select a school first")
@@ -526,7 +528,7 @@ class SchoolFormTab(QWidget):
         
         # Form title
         self.form_title = QLabel("Add New School")
-        self.form_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
+        self.form_title.setFont(QFont("Arial", 16, QFont.Bold))
         layout.addWidget(self.form_title)
         
         # Create scroll area for long form
@@ -573,7 +575,7 @@ class SchoolFormTab(QWidget):
         
         # Status label
         self.status_label = QLabel("")
-        self.status_label.setFont(QFont("Segoe UI", 9))
+        self.status_label.setFont(QFont("Arial", 9))
         layout.addWidget(self.status_label)
         
     def create_basic_info_tab(self):
@@ -878,86 +880,6 @@ class SchoolFormTab(QWidget):
             parent.tab_widget.setCurrentIndex(0)  # Switch to list tab
 
 
-class SchoolDetailsDialog(QDialog):
-    """Dialog to display school details"""
-    
-    def __init__(self, school_data, parent=None):
-        super().__init__(parent)
-        self.school_data = school_data
-        self.setWindowTitle(f"School Details - {school_data['name']}")
-        self.setGeometry(100, 100, 700, 600)
-        self.init_ui()
-        
-    def init_ui(self):
-        """Initialize the UI"""
-        layout = QVBoxLayout(self)
-        
-        # School information display
-        info_text = f"""
-        <b>School Name:</b> {self.school_data['name']}<br>
-        <b>School Code:</b> {self.school_data['school_code']}<br>
-        <b>Type:</b> {self.school_data['type']}<br>
-        <b>Address:</b> {self.school_data['address']}<br>
-        <b>City:</b> {self.school_data['city']}<br>
-        <b>Phone:</b> {self.school_data['phone']}<br>
-        <b>Email:</b> {self.school_data['email']}<br>
-        <b>Principal:</b> {self.school_data['principal_name']}<br>
-        <b>Contact Person:</b> {self.school_data['contact_person']}<br>
-        <b>Contact Phone:</b> {self.school_data['contact_person_phone']}<br>
-        <b>Student Count:</b> {self.school_data['student_count']}<br>
-        <b>Contract Status:</b> {self.school_data['contract_status']}<br>
-        <b>Monthly Fee:</b> ₹ {self.school_data['monthly_fee']:,}<br>
-        <b>Payment Status:</b> {self.school_data['payment_status']}<br>
-        <b>Assigned Buses:</b> {', '.join(self.school_data['assigned_buses']) or 'None'}<br>
-        <b>GST Number:</b> {self.school_data['gst_number']}
-        """
-        
-        info_label = QLabel(info_text)
-        info_label.setWordWrap(True)
-        layout.addWidget(info_label)
-        
-        # Close button
-        close_btn = QPushButton("Close")
-        close_btn.clicked.connect(self.accept)
-        layout.addWidget(close_btn)
-
-
-class ContractDetailsDialog(QDialog):
-    """Dialog to display contract details"""
-    
-    def __init__(self, school_data, parent=None):
-        super().__init__(parent)
-        self.school_data = school_data
-        self.setWindowTitle(f"Contract Details - {school_data['name']}")
-        self.setGeometry(100, 100, 700, 600)
-        self.init_ui()
-        
-    def init_ui(self):
-        """Initialize the UI"""
-        layout = QVBoxLayout(self)
-        
-        # Contract information display
-        contract_text = f"""
-        <b>School Name:</b> {self.school_data['name']}<br>
-        <b>Contract Status:</b> {self.school_data['contract_status']}<br>
-        <b>Contract Start Date:</b> {self.school_data['contract_start']}<br>
-        <b>Contract End Date:</b> {self.school_data['contract_end']}<br>
-        <b>Monthly Fee:</b> ₹ {self.school_data['monthly_fee']:,}<br>
-        <b>Payment Status:</b> {self.school_data['payment_status']}<br>
-        <b>Billing Address:</b> {self.school_data['billing_address']}<br>
-        <b>GST Number:</b> {self.school_data['gst_number']}
-        """
-        
-        contract_label = QLabel(contract_text)
-        contract_label.setWordWrap(True)
-        layout.addWidget(contract_label)
-        
-        # Close button
-        close_btn = QPushButton("Close")
-        close_btn.clicked.connect(self.accept)
-        layout.addWidget(close_btn)
-
-
 class SchoolBusAssignmentTab(QWidget):
     """Tab for assigning buses to schools"""
     
@@ -965,8 +887,674 @@ class SchoolBusAssignmentTab(QWidget):
         super().__init__()
         self.current_school = None
         self.init_ui()
+        self.load_available_buses()
         
     def init_ui(self):
         """Initialize the UI"""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(15)
+        
+        # School info header
+        self.school_info_widget = self.create_school_info_widget()
+        layout.addWidget(self.school_info_widget)
+        
+        # Main content split
+        main_widget = QWidget()
+        main_layout = QHBoxLayout(main_widget)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(20)
+        
+        # Left side - Available buses
+        available_widget = self.create_available_buses_widget()
+        main_layout.addWidget(available_widget, 1)
+        
+        # Right side - Assigned buses
+        assigned_widget = self.create_assigned_buses_widget()
+        main_layout.addWidget(assigned_widget, 1)
+        
+        layout.addWidget(main_widget, 1)
+        
+        # Assignment history
+        history_widget = self.create_history_widget()
+        layout.addWidget(history_widget)
+        
+        # Action buttons
+        button_widget = self.create_button_widget()
+        layout.addWidget(button_widget)
+        
+        # Status label
+        self.status_label = QLabel("Ready")
+        self.status_label.setFont(QFont("Arial", 9))
+        self.status_label.setStyleSheet("color: #7f8c8d;")
+        layout.addWidget(self.status_label)
+        
+    def create_school_info_widget(self):
+        """Create widget to display current school information"""
+        widget = QGroupBox("Selected School")
+        widget.setStyleSheet("QGroupBox { font-weight: bold; }")
+        layout = QGridLayout(widget)
+        
+        # School info labels
+        layout.addWidget(QLabel("School:"), 0, 0)
+        self.school_name_label = QLabel("No school selected")
+        self.school_name_label.setStyleSheet("font-weight: bold; color: #2980b9;")
+        layout.addWidget(self.school_name_label, 0, 1)
+        
+        layout.addWidget(QLabel("Code:"), 0, 2)
+        self.school_code_label = QLabel("-")
+        layout.addWidget(self.school_code_label, 0, 3)
+        
+        layout.addWidget(QLabel("Location:"), 0, 4)
+        self.school_location_label = QLabel("-")
+        layout.addWidget(self.school_location_label, 0, 5)
+        
+        layout.addWidget(QLabel("Buses Required:"), 0, 6)
+        self.buses_required_label = QLabel("-")
+        layout.addWidget(self.buses_required_label, 0, 7)
+        
+        # Add stretch to last column
+        layout.setColumnStretch(8, 1)
+        
+        return widget
+        
+    def create_available_buses_widget(self):
+        """Create widget to display available buses"""
+        widget = QGroupBox("Available Buses")
+        widget.setStyleSheet("QGroupBox { font-weight: bold; }")
+        layout = QVBoxLayout(widget)
+        
+        # Filter section
+        filter_layout = QHBoxLayout()
+        filter_layout.addWidget(QLabel("Filter by:"))
+        
+        self.bus_type_filter = QComboBox()
+        self.bus_type_filter.addItems(["All Types", "Standard", "Mini", "AC", "Non-AC"])
+        self.bus_type_filter.currentTextChanged.connect(self.filter_available_buses)
+        filter_layout.addWidget(self.bus_type_filter)
+        
+        self.capacity_filter = QComboBox()
+        self.capacity_filter.addItems(["All Capacities", "12 Seater", "20 Seater", "30 Seater", "40+ Seater"])
+        self.capacity_filter.currentTextChanged.connect(self.filter_available_buses)
+        filter_layout.addWidget(self.capacity_filter)
+        
+        filter_layout.addStretch()
+        
+        self.search_available = QLineEdit()
+        self.search_available.setPlaceholderText("Search bus number...")
+        self.search_available.textChanged.connect(self.filter_available_buses)
+        self.search_available.setFixedWidth(180)
+        filter_layout.addWidget(self.search_available)
+        
+        layout.addLayout(filter_layout)
+        
+        # Available buses table
+        self.available_table = QTableWidget()
+        self.available_table.setColumnCount(5)
+        self.available_table.setHorizontalHeaderLabels([
+            "Bus Number", "Type", "Capacity", "Driver", "Status"
+        ])
+        self.available_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.available_table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.available_table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.available_table.itemDoubleClicked.connect(self.assign_selected_bus)
+        layout.addWidget(self.available_table)
+        
+        # Quick assign button
+        quick_assign_btn = QPushButton("Assign Selected Bus")
+        quick_assign_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #27ae60;
+                color: white;
+                padding: 8px;
+                border-radius: 4px;
+            }
+            QPushButton:hover {
+                background-color: #2ecc71;
+            }
+        """)
+        quick_assign_btn.clicked.connect(self.assign_selected_bus)
+        layout.addWidget(quick_assign_btn)
+        
+        return widget
+        
+    def create_assigned_buses_widget(self):
+        """Create widget to display assigned buses"""
+        widget = QGroupBox("Assigned Buses")
+        widget.setStyleSheet("QGroupBox { font-weight: bold; }")
+        layout = QVBoxLayout(widget)
+        
+        # Assignment summary
+        summary_layout = QHBoxLayout()
+        summary_layout.addWidget(QLabel("Total Assigned:"))
+        self.total_assigned_label = QLabel("0")
+        self.total_assigned_label.setStyleSheet("font-weight: bold; color: #27ae60;")
+        summary_layout.addWidget(self.total_assigned_label)
+        
+        summary_layout.addWidget(QLabel("Required:"))
+        self.required_buses_label = QLabel("0")
+        self.required_buses_label.setStyleSheet("font-weight: bold; color: #e67e22;")
+        summary_layout.addWidget(self.required_buses_label)
+        
+        summary_layout.addStretch()
+        layout.addLayout(summary_layout)
+        
+        # Assigned buses table
+        self.assigned_table = QTableWidget()
+        self.assigned_table.setColumnCount(6)
+        self.assigned_table.setHorizontalHeaderLabels([
+            "Bus Number", "Type", "Capacity", "Driver", "Assigned Date", "Status"
+        ])
+        self.assigned_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.assigned_table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.assigned_table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.assigned_table.itemDoubleClicked.connect(self.show_bus_details)
+        layout.addWidget(self.assigned_table)
+        
+        # Action buttons for assigned buses
+        button_layout = QHBoxLayout()
+        
+        self.transfer_btn = QPushButton("Transfer Bus")
+        self.transfer_btn.setEnabled(False)
+        self.transfer_btn.clicked.connect(self.transfer_bus)
+        button_layout.addWidget(self.transfer_btn)
+        
+        self.remove_btn = QPushButton("Remove Assignment")
+        self.remove_btn.setEnabled(False)
+        self.remove_btn.clicked.connect(self.remove_assignment)
+        button_layout.addWidget(self.remove_btn)
+        
+        self.view_schedule_btn = QPushButton("View Schedule")
+        self.view_schedule_btn.setEnabled(False)
+        self.view_schedule_btn.clicked.connect(self.view_bus_schedule)
+        button_layout.addWidget(self.view_schedule_btn)
+        
+        button_layout.addStretch()
+        layout.addLayout(button_layout)
+        
+        # Connect selection changed to enable/disable buttons
+        self.assigned_table.itemSelectionChanged.connect(self.on_assigned_selection_changed)
+        
+        return widget
+        
+    def create_history_widget(self):
+        """Create widget to display assignment history"""
+        widget = QGroupBox("Assignment History")
+        widget.setStyleSheet("QGroupBox { font-weight: bold; }")
+        layout = QVBoxLayout(widget)
+        
+        # History table
+        self.history_table = QTableWidget()
+        self.history_table.setColumnCount(5)
+        self.history_table.setHorizontalHeaderLabels([
+            "Date", "Bus Number", "Action", "Assigned By", "Notes"
+        ])
+        self.history_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.history_table.setMaximumHeight(150)
+        self.history_table.setEditTriggers(QTableWidget.NoEditTriggers)
+        layout.addWidget(self.history_table)
+        
+        # View all button
+        view_all_btn = QPushButton("View Full History")
+        view_all_btn.clicked.connect(self.view_full_history)
+        layout.addWidget(view_all_btn, alignment=Qt.AlignRight)
+        
+        return widget
+        
+    def create_button_widget(self):
+        """Create action buttons widget"""
+        widget = QWidget()
+        layout = QHBoxLayout(widget)
+        layout.setContentsMargins(0, 0, 0, 0)
+        
+        # Bulk operations
+        bulk_label = QLabel("Bulk Operations:")
+        layout.addWidget(bulk_label)
+        
+        self.bulk_action = QComboBox()
+        self.bulk_action.addItems(["Assign Multiple Buses", "Transfer All", "Generate Assignment Report", "Optimize Assignments"])
+        layout.addWidget(self.bulk_action)
+        
+        bulk_apply_btn = QPushButton("Apply")
+        bulk_apply_btn.clicked.connect(self.apply_bulk_operation)
+        layout.addWidget(bulk_apply_btn)
+        
+        layout.addStretch()
+        
+        # Individual buttons
+        check_conflicts_btn = QPushButton("Check Conflicts")
+        check_conflicts_btn.clicked.connect(self.check_conflicts)
+        layout.addWidget(check_conflicts_btn)
+        
+        generate_report_btn = QPushButton("Generate Report")
+        generate_report_btn.clicked.connect(self.generate_assignment_report)
+        layout.addWidget(generate_report_btn)
+        
+        return widget
+        
+    def load_school_data(self, school_data):
+        """Load school data for bus assignment"""
+        self.current_school = school_data
+        
+        # Update school info
+        self.school_name_label.setText(school_data['name'])
+        self.school_code_label.setText(school_data['school_code'])
+        self.school_location_label.setText(school_data['city'])
+        buses_required = len(school_data.get('assigned_buses', []))
+        self.buses_required_label.setText(str(buses_required))
+        self.required_buses_label.setText(str(buses_required))
+        
+        # Load assigned buses for this school
+        self.load_assigned_buses(school_data.get('assigned_buses', []))
+        
+        # Update status
+        self.status_label.setText(f"Loaded school: {school_data['name']}")
+        
+    def load_available_buses(self):
+        """Load available buses into the table"""
+        # Mock data for available buses
+        available_buses = [
+            {"number": "BUS-001", "type": "AC", "capacity": 40, "driver": "Rajesh Kumar", "status": "Available"},
+            {"number": "BUS-002", "type": "Non-AC", "capacity": 30, "driver": "Suresh Singh", "status": "Available"},
+            {"number": "BUS-003", "type": "AC", "capacity": 40, "driver": "Amit Sharma", "status": "Available"},
+            {"number": "BUS-004", "type": "Mini", "capacity": 20, "driver": "Vikram Patel", "status": "Maintenance"},
+            {"number": "BUS-005", "type": "Standard", "capacity": 30, "driver": "Manoj Yadav", "status": "Available"},
+            {"number": "BUS-006", "type": "Non-AC", "capacity": 30, "driver": "Prakash Singh", "status": "Assigned"},
+            {"number": "BUS-007", "type": "AC", "capacity": 40, "driver": "Ravi Kumar", "status": "Available"},
+            {"number": "BUS-008", "type": "Mini", "capacity": 20, "driver": "Dinesh Gupta", "status": "Available"},
+            {"number": "BUS-009", "type": "Standard", "capacity": 30, "driver": "Sanjay Mishra", "status": "Available"},
+            {"number": "BUS-010", "type": "AC", "capacity": 40, "driver": "Sunil Verma", "status": "Maintenance"},
+        ]
+        
+        self.available_table.setRowCount(len(available_buses))
+        
+        for row, bus in enumerate(available_buses):
+            self.available_table.setItem(row, 0, QTableWidgetItem(bus["number"]))
+            self.available_table.setItem(row, 1, QTableWidgetItem(bus["type"]))
+            self.available_table.setItem(row, 2, QTableWidgetItem(str(bus["capacity"])))
+            self.available_table.setItem(row, 3, QTableWidgetItem(bus["driver"]))
+            
+            status_item = QTableWidgetItem(bus["status"])
+            if bus["status"] == "Available":
+                status_item.setBackground(QColor(220, 255, 220))
+                status_item.setForeground(QColor(0, 100, 0))
+            elif bus["status"] == "Maintenance":
+                status_item.setBackground(QColor(255, 220, 220))
+                status_item.setForeground(QColor(139, 0, 0))
+            elif bus["status"] == "Assigned":
+                status_item.setBackground(QColor(255, 255, 200))
+                status_item.setForeground(QColor(153, 102, 0))
+            status_item.setTextAlignment(Qt.AlignCenter)
+            self.available_table.setItem(row, 4, status_item)
+            
+    def load_assigned_buses(self, assigned_buses):
+        """Load assigned buses for current school"""
+        # Mock data for assigned buses
+        mock_assignments = []
+        for bus_number in assigned_buses:
+            # Find bus details from available buses
+            for row in range(self.available_table.rowCount()):
+                if self.available_table.item(row, 0).text() == bus_number:
+                    mock_assignments.append({
+                        "number": bus_number,
+                        "type": self.available_table.item(row, 1).text(),
+                        "capacity": self.available_table.item(row, 2).text(),
+                        "driver": self.available_table.item(row, 3).text(),
+                        "assigned_date": datetime.datetime.now().strftime("%Y-%m-%d"),
+                        "status": "Active"
+                    })
+                    break
+        
+        self.assigned_table.setRowCount(len(mock_assignments))
+        
+        for row, bus in enumerate(mock_assignments):
+            self.assigned_table.setItem(row, 0, QTableWidgetItem(bus["number"]))
+            self.assigned_table.setItem(row, 1, QTableWidgetItem(bus["type"]))
+            self.assigned_table.setItem(row, 2, QTableWidgetItem(str(bus["capacity"])))
+            self.assigned_table.setItem(row, 3, QTableWidgetItem(bus["driver"]))
+            self.assigned_table.setItem(row, 4, QTableWidgetItem(bus["assigned_date"]))
+            
+            status_item = QTableWidgetItem(bus["status"])
+            status_item.setBackground(QColor(220, 255, 220))
+            status_item.setForeground(QColor(0, 100, 0))
+            status_item.setTextAlignment(Qt.AlignCenter)
+            self.assigned_table.setItem(row, 5, status_item)
+        
+        # Update total assigned count
+        self.total_assigned_label.setText(str(len(mock_assignments)))
+        
+        # Load history
+        self.load_assignment_history()
+        
+    def load_assignment_history(self):
+        """Load assignment history"""
+        history_data = [
+            {"date": "2026-01-15 10:30", "bus": "BUS-001", "action": "Assigned", "by": "Admin", "notes": "Initial assignment"},
+            {"date": "2026-01-20 14:45", "bus": "BUS-002", "action": "Assigned", "by": "Admin", "notes": "Additional bus"},
+            {"date": "2026-02-01 09:15", "bus": "BUS-001", "action": "Transferred", "by": "Manager", "notes": "Temporary transfer"},
+            {"date": "2026-02-05 11:20", "bus": "BUS-003", "action": "Assigned", "by": "Admin", "notes": "Replacement"},
+        ]
+        
+        self.history_table.setRowCount(len(history_data))
+        
+        for row, record in enumerate(history_data):
+            self.history_table.setItem(row, 0, QTableWidgetItem(record["date"]))
+            self.history_table.setItem(row, 1, QTableWidgetItem(record["bus"]))
+            
+            action_item = QTableWidgetItem(record["action"])
+            if record["action"] == "Assigned":
+                action_item.setBackground(QColor(220, 255, 220))
+            elif record["action"] == "Transferred":
+                action_item.setBackground(QColor(255, 255, 200))
+            elif record["action"] == "Removed":
+                action_item.setBackground(QColor(255, 220, 220))
+            self.history_table.setItem(row, 2, action_item)
+            
+            self.history_table.setItem(row, 3, QTableWidgetItem(record["by"]))
+            self.history_table.setItem(row, 4, QTableWidgetItem(record["notes"]))
+            
+    def filter_available_buses(self):
+        """Filter available buses based on search and filters"""
+        search_text = self.search_available.text().lower()
+        bus_type = self.bus_type_filter.currentText()
+        capacity = self.capacity_filter.currentText()
+        
+        for row in range(self.available_table.rowCount()):
+            show_row = True
+            
+            # Search filter
+            if search_text:
+                bus_number = self.available_table.item(row, 0).text().lower()
+                driver = self.available_table.item(row, 3).text().lower()
+                if search_text not in bus_number and search_text not in driver:
+                    show_row = False
+            
+            # Type filter
+            if bus_type != "All Types":
+                row_type = self.available_table.item(row, 1).text()
+                if row_type != bus_type:
+                    show_row = False
+            
+            # Capacity filter
+            if capacity != "All Capacities":
+                row_capacity = int(self.available_table.item(row, 2).text())
+                if capacity == "12 Seater" and row_capacity != 12:
+                    show_row = False
+                elif capacity == "20 Seater" and row_capacity != 20:
+                    show_row = False
+                elif capacity == "30 Seater" and row_capacity != 30:
+                    show_row = False
+                elif capacity == "40+ Seater" and row_capacity < 40:
+                    show_row = False
+            
+            # Only show available buses
+            status = self.available_table.item(row, 4).text()
+            if status != "Available":
+                show_row = False
+                
+            self.available_table.setRowHidden(row, not show_row)
+            
+    def assign_selected_bus(self):
+        """Assign selected bus to current school"""
+        if not self.current_school:
+            QMessageBox.warning(self, "No School", "Please select a school first")
+            return
+            
+        selected_items = self.available_table.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, "No Selection", "Please select a bus to assign")
+            return
+            
+        row = selected_items[0].row()
+        bus_number = self.available_table.item(row, 0).text()
+        bus_type = self.available_table.item(row, 1).text()
+        bus_capacity = self.available_table.item(row, 2).text()
+        bus_driver = self.available_table.item(row, 3).text()
+        
+        # Check if already assigned
+        for assigned_row in range(self.assigned_table.rowCount()):
+            if self.assigned_table.item(assigned_row, 0).text() == bus_number:
+                QMessageBox.warning(self, "Already Assigned", 
+                                  f"Bus {bus_number} is already assigned to this school")
+                return
+                
+        # Check conflict
+        conflict = self.check_bus_conflict(bus_number)
+        if conflict:
+            reply = QMessageBox.question(self, "Conflict Detected", 
+                                       f"Bus {bus_number} is currently assigned to another school. "
+                                       "Do you want to transfer it?",
+                                       QMessageBox.Yes | QMessageBox.No)
+            if reply != QMessageBox.Yes:
+                return
+        
+        # Add to assigned table
+        current_row = self.assigned_table.rowCount()
+        self.assigned_table.insertRow(current_row)
+        
+        self.assigned_table.setItem(current_row, 0, QTableWidgetItem(bus_number))
+        self.assigned_table.setItem(current_row, 1, QTableWidgetItem(bus_type))
+        self.assigned_table.setItem(current_row, 2, QTableWidgetItem(bus_capacity))
+        self.assigned_table.setItem(current_row, 3, QTableWidgetItem(bus_driver))
+        self.assigned_table.setItem(current_row, 4, QTableWidgetItem(datetime.datetime.now().strftime("%Y-%m-%d")))
+        
+        status_item = QTableWidgetItem("Active")
+        status_item.setBackground(QColor(220, 255, 220))
+        status_item.setForeground(QColor(0, 100, 0))
+        status_item.setTextAlignment(Qt.AlignCenter)
+        self.assigned_table.setItem(current_row, 5, status_item)
+        
+        # Update bus status in available table
+        status_item = QTableWidgetItem("Assigned")
+        status_item.setBackground(QColor(255, 255, 200))
+        status_item.setForeground(QColor(153, 102, 0))
+        status_item.setTextAlignment(Qt.AlignCenter)
+        self.available_table.setItem(row, 4, status_item)
+        
+        # Update counts
+        self.total_assigned_label.setText(str(self.assigned_table.rowCount()))
+        
+        # Add to history
+        self.add_to_history(bus_number, "Assigned", "Manual assignment")
+        
+        QMessageBox.information(self, "Success", f"Bus {bus_number} assigned successfully")
+        self.status_label.setText(f"Bus {bus_number} assigned at {datetime.datetime.now().strftime('%H:%M:%S')}")
+        
+    def transfer_bus(self):
+        """Transfer selected bus to another school"""
+        selected_items = self.assigned_table.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, "No Selection", "Please select a bus to transfer")
+            return
+            
+        row = selected_items[0].row()
+        bus_number = self.assigned_table.item(row, 0).text()
+        
+        # In a real app, this would open a dialog to select target school
+        QMessageBox.information(self, "Transfer Bus", 
+                              f"Transfer functionality for bus {bus_number} would open a school selection dialog.\n\n"
+                              "This is a demo - in the real application, you would select the target school from a list.")
+        
+        self.add_to_history(bus_number, "Transferred", "Transferred to another school (demo)")
+        
+    def remove_assignment(self):
+        """Remove bus assignment"""
+        selected_items = self.assigned_table.selectedItems()
+        if not selected_items:
+            QMessageBox.warning(self, "No Selection", "Please select a bus to remove")
+            return
+            
+        row = selected_items[0].row()
+        bus_number = self.assigned_table.item(row, 0).text()
+        
+        reply = QMessageBox.question(self, "Confirm Removal", 
+                                   f"Remove bus {bus_number} from this school?",
+                                   QMessageBox.Yes | QMessageBox.No)
+        
+        if reply == QMessageBox.Yes:
+            # Remove from assigned table
+            self.assigned_table.removeRow(row)
+            
+            # Update bus status in available table
+            for avail_row in range(self.available_table.rowCount()):
+                if self.available_table.item(avail_row, 0).text() == bus_number:
+                    status_item = QTableWidgetItem("Available")
+                    status_item.setBackground(QColor(220, 255, 220))
+                    status_item.setForeground(QColor(0, 100, 0))
+                    status_item.setTextAlignment(Qt.AlignCenter)
+                    self.available_table.setItem(avail_row, 4, status_item)
+                    break
+            
+            # Update counts
+            self.total_assigned_label.setText(str(self.assigned_table.rowCount()))
+            
+            # Add to history
+            self.add_to_history(bus_number, "Removed", "Assignment removed")
+            
+            QMessageBox.information(self, "Success", f"Bus {bus_number} removed from assignment")
+            
+    def check_bus_conflict(self, bus_number):
+        """Check if bus is already assigned to another school"""
+        # In a real app, this would query the database
+        # Mock conflict detection
+        conflict_buses = ["BUS-003", "BUS-006"]  # Example buses already assigned elsewhere
+        return bus_number in conflict_buses
+        
+    def check_conflicts(self):
+        """Check for assignment conflicts"""
+        conflicts = []
+        
+        # Check each assigned bus for conflicts
+        for row in range(self.assigned_table.rowCount()):
+            bus_number = self.assigned_table.item(row, 0).text()
+            if self.check_bus_conflict(bus_number):
+                conflicts.append(bus_number)
+        
+        if conflicts:
+            conflict_list = ", ".join(conflicts)
+            QMessageBox.warning(self, "Conflicts Detected", 
+                              f"The following buses have scheduling conflicts: {conflict_list}")
+            
+            # Highlight conflicting rows
+            for row in range(self.assigned_table.rowCount()):
+                bus_number = self.assigned_table.item(row, 0).text()
+                if bus_number in conflicts:
+                    for col in range(self.assigned_table.columnCount()):
+                        item = self.assigned_table.item(row, col)
+                        if item:
+                            item.setBackground(QColor(255, 200, 200))
+        else:
+            QMessageBox.information(self, "No Conflicts", "No scheduling conflicts detected")
+            
+    def show_bus_details(self):
+        """Show detailed information about selected bus"""
+        selected_items = self.assigned_table.selectedItems()
+        if not selected_items:
+            return
+            
+        row = selected_items[0].row()
+        bus_number = self.assigned_table.item(row, 0).text()
+        
+        # In a real app, this would open a detailed bus information dialog
+        QMessageBox.information(self, "Bus Details", 
+                              f"Bus Number: {bus_number}\n"
+                              f"Type: {self.assigned_table.item(row, 1).text()}\n"
+                              f"Capacity: {self.assigned_table.item(row, 2).text()}\n"
+                              f"Driver: {self.assigned_table.item(row, 3).text()}\n"
+                              f"Assigned Date: {self.assigned_table.item(row, 4).text()}\n"
+                              f"Status: {self.assigned_table.item(row, 5).text()}\n\n"
+                              "This is a demo - full bus details would be shown here.")
+                              
+    def view_bus_schedule(self):
+        """View schedule for selected bus"""
+        selected_items = self.assigned_table.selectedItems()
+        if not selected_items:
+            return
+            
+        row = selected_items[0].row()
+        bus_number = self.assigned_table.item(row, 0).text()
+        
+        QMessageBox.information(self, "Bus Schedule", 
+                              f"Schedule for bus {bus_number} would be displayed here.\n\n"
+                              "This is a demo - the full schedule view would include:\n"
+                              "• Morning pickup times\n"
+                              "• Afternoon drop times\n"
+                              "• Route details\n"
+                              "• Driver duty hours\n"
+                              "• Maintenance schedule")
+                              
+    def on_assigned_selection_changed(self):
+        """Enable/disable buttons based on selection"""
+        has_selection = len(self.assigned_table.selectedItems()) > 0
+        self.transfer_btn.setEnabled(has_selection)
+        self.remove_btn.setEnabled(has_selection)
+        self.view_schedule_btn.setEnabled(has_selection)
+        
+    def add_to_history(self, bus_number, action, notes=""):
+        """Add an entry to assignment history"""
+        current_row = self.history_table.rowCount()
+        self.history_table.insertRow(0)  # Insert at top
+        
+        self.history_table.setItem(0, 0, QTableWidgetItem(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")))
+        self.history_table.setItem(0, 1, QTableWidgetItem(bus_number))
+        
+        action_item = QTableWidgetItem(action)
+        if action == "Assigned":
+            action_item.setBackground(QColor(220, 255, 220))
+        elif action == "Transferred":
+            action_item.setBackground(QColor(255, 255, 200))
+        elif action == "Removed":
+            action_item.setBackground(QColor(255, 220, 220))
+        self.history_table.setItem(0, 2, action_item)
+        
+        self.history_table.setItem(0, 3, QTableWidgetItem("Admin"))  # Current user
+        self.history_table.setItem(0, 4, QTableWidgetItem(notes))
+        
+    def view_full_history(self):
+        """View complete assignment history"""
+        QMessageBox.information(self, "Full History", 
+                              "Complete assignment history would be shown in a separate dialog.\n\n"
+                              "This would include:\n"
+                              "• All assignments (current and past)\n"
+                              "• Transfer history\n"
+                              "• Driver changes\n"
+                              "• Maintenance records\n"
+                              "• Billing history")
+                              
+    def apply_bulk_operation(self):
+        """Apply bulk operation"""
+        operation = self.bulk_action.currentText()
+        
+        if operation == "Assign Multiple Buses":
+            QMessageBox.information(self, "Bulk Assign", 
+                                  "Multiple bus selection dialog would open here.\n\n"
+                                  "You could select multiple buses and assign them at once.")
+        elif operation == "Transfer All":
+            reply = QMessageBox.question(self, "Transfer All", 
+                                       "Transfer all assigned buses to another school?",
+                                       QMessageBox.Yes | QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                QMessageBox.information(self, "Transfer All", 
+                                      "All buses transferred (demo mode)")
+        elif operation == "Generate Assignment Report":
+            self.generate_assignment_report()
+        elif operation == "Optimize Assignments":
+            QMessageBox.information(self, "Optimize Assignments", 
+                                  "Assignment optimization would:\n"
+                                  "• Balance bus loads\n"
+                                  "• Minimize travel time\n"
+                                  "• Reduce fuel costs\n"
+                                  "• Suggest optimal routes")
+                                  
+    def generate_assignment_report(self):
+        """Generate assignment report"""
+        QMessageBox.information(self, "Generate Report", 
+                              "Assignment report generated successfully!\n\n"
+                              "Report includes:\n"
+                              f"• School: {self.school_name_label.text()}\n"
+                              f"• Total Buses Assigned: {self.total_assigned_label.text()}\n"
+                              f"• Buses Required: {self.required_buses_label.text()}\n"
+                              "• Assignment History\n"
+                              "• Driver Details\n\n"
+                              "Report saved as PDF (demo mode)")
+        self.status_label.setText("Report generated at " + datetime.datetime.now().strftime("%H:%M:%S"))
