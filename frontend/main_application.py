@@ -4,12 +4,21 @@ from PyQt5.QtWidgets import (
     QStatusBar, QMenuBar, QMenu, QToolBar, QAction, QFrame,
     QGridLayout, QTableWidget, QTableWidgetItem, QHeaderView,
     QMessageBox, QLineEdit, QComboBox, QDateEdit, QSpinBox,
-    QDoubleSpinBox, QTextEdit, QGroupBox, QTabWidget, QApplication
+    QDoubleSpinBox, QTextEdit, QGroupBox, QTabWidget, QApplication,
+    QSizePolicy
 )
 from PyQt5.QtGui import QFont, QIcon, QColor
 from PyQt5.QtCore import Qt, QTimer, QDate
 import datetime
 import sys
+
+# Import integrated modules
+from bus_management import BusManagementPage
+from driver_management import DriverManagementPage
+from school_management import SchoolManagementPage
+from reports_dashboard import ReportsDashboard  # Integrated reports dashboard
+from system_admin import UserManagement
+from system_settings import SystemSettings
 
 class MainApplication(QMainWindow):
     """
@@ -21,18 +30,16 @@ class MainApplication(QMainWindow):
         self.username = username
         self.user_role = role
         
-        # Setup window
+        # Setup window with minimum size
         self.setWindowTitle(f"Bus Management System - Welcome {username}")
-        self.setGeometry(100, 50, 1000, 600) #100, 50, 1400, 800
+        self.setGeometry(100, 50, 1000, 600)
+        self.setMinimumSize(1000, 600)
         
         # Setup all UI components
         self.setup_menu_bar()
         self.setup_toolbar()
         self.setup_main_content()
         self.setup_status_bar()
-        
-        # Load initial data - FIXED: This method doesn't exist, remove or create it
-        # self.load_dashboard_data()  # Remove this line
         
     def setup_menu_bar(self):
         """Setup the menu bar"""
@@ -122,34 +129,45 @@ class MainApplication(QMainWindow):
         
         toolbar.addSeparator()
         
+        # Core module buttons based on user role
+        if self.user_role in ["Super Admin", "Admin", "Manager"]:
+            # Bus Management
+            bus_btn = QPushButton("🚌 Buses")
+            bus_btn.clicked.connect(lambda: self.switch_module("Buses"))
+            toolbar.addWidget(bus_btn)
+            
+            # Driver Management
+            driver_btn = QPushButton("👨‍✈️ Drivers")
+            driver_btn.clicked.connect(lambda: self.switch_module("Drivers"))
+            toolbar.addWidget(driver_btn)
+            
+            # School Management
+            school_btn = QPushButton("🏫 Schools")
+            school_btn.clicked.connect(lambda: self.switch_module("Schools"))
+            toolbar.addWidget(school_btn)
+            
+            toolbar.addSeparator()
+        
         # Reports button
-        reports_btn = QPushButton("Reports")
+        reports_btn = QPushButton("📊 Reports")
         reports_btn.clicked.connect(lambda: self.switch_module("Reports"))
         toolbar.addWidget(reports_btn)
         
-        # Users button (only for admins)
+        # Admin-only buttons
         if self.user_role in ["Super Admin", "Admin"]:
-            users_btn = QPushButton("Users")
-            users_btn.clicked.connect(lambda: self.switch_module("Users"))
+            users_btn = QPushButton("👥 Users")
+            users_btn.clicked.connect(lambda: self.switch_module("User Management"))
             toolbar.addWidget(users_btn)
+            
+            settings_btn = QPushButton("⚙️ Settings")
+            settings_btn.clicked.connect(lambda: self.switch_module("System Settings"))
+            toolbar.addWidget(settings_btn)
         
         toolbar.addSeparator()
         
-        # Print button
-        print_btn = QPushButton("Print")
-        print_btn.clicked.connect(self.print_current)
-        toolbar.addWidget(print_btn)
-        
-        # Export button
-        export_btn = QPushButton("Export")
-        export_btn.clicked.connect(self.export_data)
-        toolbar.addWidget(export_btn)
-        
-        toolbar.addSeparator()
-        
-        # Help button
-        help_btn = QPushButton("Help")
-        help_btn.clicked.connect(self.show_help)
+        # Common buttons
+        help_btn = QPushButton("❓ Help")
+        help_btn.clicked.connect(lambda: self.switch_module("Help"))
         toolbar.addWidget(help_btn)
         
     def setup_main_content(self):
@@ -174,7 +192,7 @@ class MainApplication(QMainWindow):
     def create_sidebar(self):
         """Create the sidebar navigation"""
         sidebar = QFrame()
-        sidebar.setFixedWidth(220)
+        sidebar.setFixedWidth(240)
         sidebar.setFrameStyle(QFrame.Box | QFrame.Raised)
         
         sidebar_layout = QVBoxLayout(sidebar)
@@ -186,11 +204,11 @@ class MainApplication(QMainWindow):
         user_layout = QVBoxLayout(user_frame)
         
         user_label = QLabel(self.username)
-        user_label.setFont(QFont("Arial", 12, QFont.Bold))
+        user_label.setFont(QFont("Segoe UI", 12, QFont.Bold))
         user_label.setAlignment(Qt.AlignCenter)
         
         role_label = QLabel(self.user_role)
-        role_label.setFont(QFont("Arial", 10))
+        role_label.setFont(QFont("Segoe UI", 10))
         role_label.setStyleSheet("color: #7f8c8d;")
         role_label.setAlignment(Qt.AlignCenter)
         
@@ -204,34 +222,31 @@ class MainApplication(QMainWindow):
         
         # Navigation list
         self.nav_list = QListWidget()
-        self.nav_list.setFont(QFont("Arial", 11))
+        self.nav_list.setFont(QFont("Segoe UI", 11))
         
         # Add navigation items based on user role
         nav_items = [("📊 Dashboard", "Dashboard")]
         
-        # Add role-based items
+        # Core modules - available for Manager, Admin, Super Admin
         if self.user_role in ["Super Admin", "Admin", "Manager"]:
             nav_items.extend([
                 ("🚌 Buses", "Buses"),
                 ("👨‍✈️ Drivers", "Drivers"),
                 ("🏫 Schools", "Schools"),
-                ("💰 Invoices", "Invoices"),
             ])
         
-        nav_items.append(("📈 Reports", "Reports"))
+        # Reports module (integrated from reportsdash.py)
+        nav_items.append(("📈 Reports Dashboard", "Reports"))
         
+        # Admin-only modules
         if self.user_role in ["Super Admin", "Admin"]:
             nav_items.extend([
-                ("⚙️ Settings", "Settings"),
-                ("👥 Users", "Users"),
-                ("🗄️ Database", "Database"),
-                ("📝 Activity Logs", "Activity Logs"),
+                ("👥 User Management", "User Management"),
+                ("⚙️ System Settings", "System Settings"),
             ])
         
+        # Common modules
         nav_items.extend([
-            ("🔍 Search", "Search"),
-            ("📅 Calendar", "Calendar"),
-            ("🔔 Notifications", "Notifications"),
             ("❓ Help", "Help")
         ])
         
@@ -252,7 +267,7 @@ class MainApplication(QMainWindow):
         
         # Logout button at bottom
         logout_btn = QPushButton("🚪 Logout")
-        logout_btn.setFont(QFont("Arial", 10))
+        logout_btn.setFont(QFont("Segoe UI", 10))
         logout_btn.clicked.connect(self.logout)
         sidebar_layout.addWidget(logout_btn)
         
@@ -265,19 +280,30 @@ class MainApplication(QMainWindow):
         
         # Create all module pages
         self.dashboard_page = self.create_dashboard_page()
-        self.reports_page = self.create_reports_page()
-        self.users_page = self.create_users_page()
-        self.settings_page = self.create_settings_page()
+        self.bus_management_page = BusManagementPage()
+        self.driver_management_page = DriverManagementPage()
+        self.school_management_page = SchoolManagementPage()
+        self.reports_dashboard_page = ReportsDashboard()  # Integrated reports dashboard
+        self.user_management_page = UserManagement()
+        self.system_settings_page = SystemSettings()
         self.help_page = self.create_help_page()
         self.placeholder_page = self.create_placeholder_page()
         
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.dashboard_page)
-        self.stacked_widget.addWidget(self.reports_page)
-        self.stacked_widget.addWidget(self.users_page)
-        self.stacked_widget.addWidget(self.settings_page)
+        self.stacked_widget.addWidget(self.bus_management_page)
+        self.stacked_widget.addWidget(self.driver_management_page)
+        self.stacked_widget.addWidget(self.school_management_page)
+        self.stacked_widget.addWidget(self.reports_dashboard_page)
+        self.stacked_widget.addWidget(self.user_management_page)
+        self.stacked_widget.addWidget(self.system_settings_page)
         self.stacked_widget.addWidget(self.help_page)
         self.stacked_widget.addWidget(self.placeholder_page)
+        
+        # Set minimum size for all pages
+        for i in range(self.stacked_widget.count()):
+            widget = self.stacked_widget.widget(i)
+            widget.setMinimumSize(1000, 600)
         
         # Set default page
         self.stacked_widget.setCurrentIndex(0)
@@ -287,30 +313,19 @@ class MainApplication(QMainWindow):
     def create_dashboard_page(self):
         """Create dashboard page"""
         page = QWidget()
+        page.setMinimumSize(1000, 600)
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
-        """
-        # Welcome message
+        
+        """# Welcome section
         welcome_label = QLabel(f"Welcome, {self.username}!")
-        welcome_label.setFont(QFont("Arial", 20, QFont.Bold))
-        welcome_label.setStyleSheet("color: #2c3e50; margin-bottom: 10px;")
+        welcome_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
+        welcome_label.setStyleSheet("color: #2c3e50; margin-bottom: 20px;")
+        layout.addWidget(welcome_label)"""
         
-        date_label = QLabel(datetime.datetime.now().strftime("%A, %B %d, %Y"))
-        date_label.setFont(QFont("Arial", 12))
-        date_label.setStyleSheet("color: #7f8c8d; margin-bottom: 20px;")
-        
-        layout.addWidget(welcome_label)
-        layout.addWidget(date_label)
-        
-        # Add separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.HLine)
-        separator.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(separator)
-        """
         # Statistics section
         stats_label = QLabel("System Overview")
-        stats_label.setFont(QFont("Arial", 16, QFont.Bold))
+        stats_label.setFont(QFont("Segoe UI", 16, QFont.Bold))
         stats_label.setStyleSheet("color: #2c3e50; margin-top: 20px;")
         layout.addWidget(stats_label)
         
@@ -321,9 +336,9 @@ class MainApplication(QMainWindow):
             ("Total Buses", "25", QColor(52, 152, 219)),
             ("Active Drivers", "18", QColor(46, 204, 113)),
             ("Registered Schools", "12", QColor(155, 89, 182)),
-            ("Pending Invoices", "8", QColor(231, 76, 60)),
-            ("Insurance Expiring", "3", QColor(241, 196, 15)),
-            ("Due Salaries", "5", QColor(230, 126, 34))
+            ("Active Contracts", "10", QColor(231, 76, 60)),
+            ("Reports Generated", "128", QColor(241, 196, 15)),
+            ("System Users", "8", QColor(230, 126, 34))
         ]
         
         for i, (title, value, color) in enumerate(stats_data):
@@ -332,9 +347,34 @@ class MainApplication(QMainWindow):
         
         layout.addLayout(stats_grid)
         
+        # Quick access buttons
+        quick_access_label = QLabel("Quick Access")
+        quick_access_label.setFont(QFont("Segoe UI", 16, QFont.Bold))
+        quick_access_label.setStyleSheet("color: #2c3e50; margin-top: 20px;")
+        layout.addWidget(quick_access_label)
+        
+        quick_access_layout = QHBoxLayout()
+        
+        quick_actions = [
+            ("🚌 Add New Bus", "Buses"),
+            ("👨‍✈️ Add Driver", "Drivers"),
+            ("🏫 Add School", "Schools"),
+            ("📊 Generate Report", "Reports")
+        ]
+        
+        for text, module in quick_actions:
+            if self.check_access(module):
+                btn = QPushButton(text)
+                btn.setFont(QFont("Segoe UI", 10))
+                btn.setFixedHeight(40)
+                btn.clicked.connect(lambda checked, m=module: self.switch_module(m))
+                quick_access_layout.addWidget(btn)
+        
+        layout.addLayout(quick_access_layout)
+        
         # Recent activity section
         activity_label = QLabel("Recent Activity")
-        activity_label.setFont(QFont("Arial", 16, QFont.Bold))
+        activity_label.setFont(QFont("Segoe UI", 16, QFont.Bold))
         activity_label.setStyleSheet("color: #2c3e50; margin-top: 20px;")
         layout.addWidget(activity_label)
         
@@ -350,7 +390,7 @@ class MainApplication(QMainWindow):
             ["10:30 AM", self.username, "Login", "Successful login to system"],
             ["11:15 AM", "Manager", "Added Bus", "Bus No: BUS-025 added"],
             ["02:45 PM", "Admin", "Generated Report", "Monthly financial report"],
-            ["04:20 PM", "Accountant", "Processed Invoice", "Invoice #INV-1023 paid"],
+            ["04:20 PM", "Accountant", "Updated School", "School contract renewed"],
             ["05:10 PM", "Admin", "Updated Settings", "Tax rate updated to 18%"]
         ]
         
@@ -360,24 +400,6 @@ class MainApplication(QMainWindow):
                 self.activity_table.setItem(row, col, item)
         
         layout.addWidget(self.activity_table)
-        
-        # Quick actions
-        actions_label = QLabel("Quick Actions")
-        actions_label.setFont(QFont("Arial", 16, QFont.Bold))
-        actions_label.setStyleSheet("color: #2c3e50; margin-top: 20px;")
-        layout.addWidget(actions_label)
-        
-        actions_layout = QHBoxLayout()
-        
-        actions = ["Generate Report", "Add New Bus", "Process Salary", "Create Invoice"]
-        
-        for action in actions:
-            btn = QPushButton(action)
-            btn.setFont(QFont("Arial", 10))
-            btn.setFixedHeight(40)
-            actions_layout.addWidget(btn)
-        
-        layout.addLayout(actions_layout)
         
         layout.addStretch()
         
@@ -393,12 +415,12 @@ class MainApplication(QMainWindow):
         
         # Title
         title_label = QLabel(title)
-        title_label.setFont(QFont("Arial", 11))
+        title_label.setFont(QFont("Segoe UI", 11))
         title_label.setAlignment(Qt.AlignCenter)
         
         # Value
         value_label = QLabel(value)
-        value_label.setFont(QFont("Arial", 24, QFont.Bold))
+        value_label.setFont(QFont("Segoe UI", 24, QFont.Bold))
         value_label.setAlignment(Qt.AlignCenter)
         
         # Set color
@@ -409,84 +431,16 @@ class MainApplication(QMainWindow):
         
         return card
         
-    def create_reports_page(self):
-        """Create reports page"""
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Page header
-        header = QLabel("📊 Reports Module")
-        header.setFont(QFont("Arial", 20, QFont.Bold))
-        header.setStyleSheet("color: #2c3e50;")
-        layout.addWidget(header)
-        
-        # Add separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.HLine)
-        separator.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(separator)
-        
-        layout.addWidget(QLabel("Reports functionality will be implemented here"))
-        layout.addStretch()
-        
-        return page
-        
-    def create_users_page(self):
-        """Create users management page"""
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Page header
-        header = QLabel("👥 User Management")
-        header.setFont(QFont("Arial", 20, QFont.Bold))
-        header.setStyleSheet("color: #2c3e50;")
-        layout.addWidget(header)
-        
-        # Add separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.HLine)
-        separator.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(separator)
-        
-        layout.addWidget(QLabel("User management functionality will be implemented here"))
-        layout.addStretch()
-        
-        return page
-        
-    def create_settings_page(self):
-        """Create settings page"""
-        page = QWidget()
-        layout = QVBoxLayout(page)
-        layout.setContentsMargins(20, 20, 20, 20)
-        
-        # Page header
-        header = QLabel("⚙️ System Settings")
-        header.setFont(QFont("Arial", 20, QFont.Bold))
-        header.setStyleSheet("color: #2c3e50;")
-        layout.addWidget(header)
-        
-        # Add separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.HLine)
-        separator.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(separator)
-        
-        layout.addWidget(QLabel("System settings functionality will be implemented here"))
-        layout.addStretch()
-        
-        return page
-        
     def create_help_page(self):
         """Create help page"""
         page = QWidget()
+        page.setMinimumSize(1000, 600)
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
         
         # Page header
         header = QLabel("❓ Help & Support")
-        header.setFont(QFont("Arial", 20, QFont.Bold))
+        header.setFont(QFont("Segoe UI", 20, QFont.Bold))
         header.setStyleSheet("color: #2c3e50;")
         layout.addWidget(header)
         
@@ -499,7 +453,7 @@ class MainApplication(QMainWindow):
         # Help content
         help_text = QTextEdit()
         help_text.setReadOnly(True)
-        help_text.setFont(QFont("Arial", 11))
+        help_text.setFont(QFont("Segoe UI", 11))
         help_text.setPlainText(f"""
 Welcome to Bus Management System, {self.username}!
 
@@ -508,22 +462,36 @@ Quick Guide:
 1. DASHBOARD
    - View system statistics
    - Monitor recent activities
-   - Access quick actions
+   - Quick access to modules
 
-2. REPORTS
-   - Generate various reports
-   - Export to PDF/Excel
-   - Schedule automatic reports
+2. BUS MANAGEMENT
+   - Add/Edit/Delete buses
+   - Track insurance status
+   - Manage bus details
 
-3. SETTINGS
-   - Configure system preferences
-   - Manage database backups
-   - Customize application settings
+3. DRIVER MANAGEMENT
+   - Manage driver information
+   - Track license expiry
+   - Assign buses to drivers
 
-4. USER MANAGEMENT
-   - Add/Edit/Delete users
-   - Assign roles and permissions
-   - Reset user passwords
+4. SCHOOL MANAGEMENT
+   - Manage school contracts
+   - Assign buses to schools
+   - Track billing and payments
+
+5. REPORTS DASHBOARD
+   - Generate comprehensive reports
+   - Financial, Bus, Driver, School, and System reports
+   - Export to multiple formats (PDF, Excel, CSV, HTML)
+   - Save report templates
+
+6. ADMINISTRATION
+   - User management (Admin only)
+   - System configuration
+   - Database management
+
+User Permissions:
+- {self.user_role}: {self.get_role_permissions()}
 
 Need Help?
 - Check the user guide for detailed instructions
@@ -545,17 +513,18 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
     def create_placeholder_page(self):
         """Create a placeholder page for modules not implemented"""
         page = QWidget()
+        page.setMinimumSize(1000, 600)
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
         
         # Coming soon message
         message = QLabel("🚧 Module Under Development")
-        message.setFont(QFont("Arial", 24, QFont.Bold))
+        message.setFont(QFont("Segoe UI", 24, QFont.Bold))
         message.setStyleSheet("color: #e74c3c;")
         message.setAlignment(Qt.AlignCenter)
         
         info = QLabel("This module is currently being developed.\nIt will be available in the next update.")
-        info.setFont(QFont("Arial", 14))
+        info.setFont(QFont("Segoe UI", 14))
         info.setAlignment(Qt.AlignCenter)
         
         layout.addStretch()
@@ -565,11 +534,37 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         
         # Back to dashboard button
         back_btn = QPushButton("← Back to Dashboard")
-        back_btn.setFont(QFont("Arial", 12))
+        back_btn.setFont(QFont("Segoe UI", 12))
         back_btn.clicked.connect(lambda: self.switch_module("Dashboard"))
         layout.addWidget(back_btn)
         
         return page
+        
+    def get_role_permissions(self):
+        """Get permissions description for current role"""
+        permissions = {
+            "Super Admin": "Full access to all modules including user management",
+            "Admin": "Full access to all management modules",
+            "Manager": "Access to bus, driver, school management and reports",
+            "User": "View-only access to dashboard and reports"
+        }
+        return permissions.get(self.user_role, "Limited access")
+        
+    def check_access(self, module):
+        """Check if user has access to a module"""
+        # Define access rules
+        access_rules = {
+            "Dashboard": ["Super Admin", "Admin", "Manager", "User"],
+            "Buses": ["Super Admin", "Admin", "Manager"],
+            "Drivers": ["Super Admin", "Admin", "Manager"],
+            "Schools": ["Super Admin", "Admin", "Manager"],
+            "Reports": ["Super Admin", "Admin", "Manager", "User"],
+            "User Management": ["Super Admin", "Admin"],
+            "System Settings": ["Super Admin", "Admin"],
+            "Help": ["Super Admin", "Admin", "Manager", "User"]
+        }
+        
+        return self.user_role in access_rules.get(module, [])
         
     def setup_status_bar(self):
         """Setup the status bar"""
@@ -581,10 +576,10 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         
         # Add permanent widgets
         user_label = QLabel(f"👤 {self.username} ({self.user_role})")
-        user_label.setFont(QFont("Arial", 9))
+        user_label.setFont(QFont("Segoe UI", 9))
         
         time_label = QLabel()
-        time_label.setFont(QFont("Arial", 9))
+        time_label.setFont(QFont("Segoe UI", 9))
         
         # Update time every second
         self.status_timer = QTimer()
@@ -600,28 +595,43 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         module = item.data(Qt.UserRole)
         self.current_module = module
         
+        # Check access
+        if not self.check_access(module):
+            QMessageBox.warning(self, "Access Denied", 
+                              f"You don't have permission to access {module}.")
+            return
+            
         # Update status bar
         self.statusBar().showMessage(f"Switched to {module}")
         
         # Switch to appropriate page
         module_map = {
             "Dashboard": 0,
-            "Reports": 1,
-            "Users": 2,
-            "Settings": 3,
-            "Help": 4
+            "Buses": 1,
+            "Drivers": 2,
+            "Schools": 3,
+            "Reports": 4,  # Integrated reports dashboard
+            "User Management": 5,
+            "System Settings": 6,
+            "Help": 7
         }
         
         if module in module_map:
             self.stacked_widget.setCurrentIndex(module_map[module])
         else:
             # Show placeholder for other modules
-            self.stacked_widget.setCurrentIndex(5)  # Placeholder page
+            self.stacked_widget.setCurrentIndex(8)  # Placeholder page
             QMessageBox.information(self, "Coming Soon", 
                                   f"The {module} module is under development.")
             
     def switch_module(self, module_name):
         """Switch to a specific module"""
+        # Check access first
+        if not self.check_access(module_name):
+            QMessageBox.warning(self, "Access Denied", 
+                              f"You don't have permission to access {module_name}.")
+            return
+            
         # Find and select the navigation item
         for i in range(self.nav_list.count()):
             item = self.nav_list.item(i)
@@ -660,6 +670,12 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         
         if reply == QMessageBox.Yes:
             self.close()
-            # In a real app, you would restart the login window here
             QMessageBox.information(None, "Logged Out", 
                                   "You have been logged out successfully.")
+
+# Main entry point
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainApplication(username="Admin", role="Super Admin")
+    window.show()
+    sys.exit(app.exec_())

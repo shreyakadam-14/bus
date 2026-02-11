@@ -12,7 +12,7 @@ class LoginWindow(QWidget):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Bus Management System - Login")
+        self.setWindowTitle("OM SAI TRAVELS - Login")
         
         # Set window size
         self.setFixedSize(450, 350)  # Fixed size for login window
@@ -28,14 +28,14 @@ class LoginWindow(QWidget):
         main_layout.setSpacing(15)
         
         # Application title
-        title_label = QLabel("BUS MANAGEMENT SYSTEM")
-        title_font = QFont("Arial", 16, QFont.Bold)
+        title_label = QLabel("OM SAI TRAVELS")
+        title_font = QFont("Segoe UI", 16, QFont.Bold)
         title_label.setFont(title_font)
         title_label.setAlignment(Qt.AlignCenter)
         
         # Subtitle
         subtitle_label = QLabel("Administration Portal")
-        subtitle_font = QFont("Arial", 10)
+        subtitle_font = QFont("Segoe UI", 10)
         subtitle_label.setFont(subtitle_font)
         subtitle_label.setAlignment(Qt.AlignCenter)
         
@@ -54,7 +54,7 @@ class LoginWindow(QWidget):
         # Username section
         username_layout = QHBoxLayout()
         username_label = QLabel("Username:")
-        username_font = QFont("Arial", 10)
+        username_font = QFont("Segoe UI", 10)
         username_label.setFont(username_font)
         
         self.username_input = QLineEdit()
@@ -83,21 +83,21 @@ class LoginWindow(QWidget):
         
         # Login button
         self.login_button = QPushButton("Login")
-        login_font = QFont("Arial", 11, QFont.Bold)
+        login_font = QFont("Segoe UI", 11, QFont.Bold)
         self.login_button.setFont(login_font)
         self.login_button.setMinimumHeight(35)
         self.login_button.clicked.connect(self.authenticate)
         
         # Status label
         self.status_label = QLabel("")
-        self.status_label.setFont(QFont("Arial", 9))
+        self.status_label.setFont(QFont("Segoe UI", 9))
         self.status_label.setAlignment(Qt.AlignCenter)
         
-        # Demo credentials label
+        """# Demo credentials label
         demo_label = QLabel("Demo: admin / admin123")
-        demo_font = QFont("Arial", 8)
+        demo_font = QFont("Segoe UI", 8)
         demo_label.setFont(demo_font)
-        demo_label.setAlignment(Qt.AlignCenter)
+        demo_label.setAlignment(Qt.AlignCenter)"""
         
         # Add widgets to form layout
         form_layout.addLayout(username_layout)
@@ -105,7 +105,7 @@ class LoginWindow(QWidget):
         form_layout.addWidget(self.remember_check)
         form_layout.addWidget(self.login_button)
         form_layout.addWidget(self.status_label)
-        form_layout.addWidget(demo_label)
+        """form_layout.addWidget(demo_label)"""
         
         # Add all to main layout
         main_layout.addWidget(title_label)
@@ -115,7 +115,7 @@ class LoginWindow(QWidget):
         
         # Add copyright label at bottom
         copyright_label = QLabel("© 2026 Bus Management System")
-        copyright_label.setFont(QFont("Arial", 8))
+        copyright_label.setFont(QFont("Segoe UI", 8))
         copyright_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(copyright_label)
         
