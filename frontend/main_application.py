@@ -11,6 +11,10 @@ from PyQt5.QtCore import Qt, QTimer, QDate
 import datetime
 import sys
 
+# Import the management modules
+from bus_management import BusManagementPage  # Add this line
+from driver_management import DriverManagementPage  # Add this line
+
 class MainApplication(QMainWindow):
     """
     Main Application Window - Shows after successful login
@@ -30,9 +34,6 @@ class MainApplication(QMainWindow):
         self.setup_toolbar()
         self.setup_main_content()
         self.setup_status_bar()
-        
-        # Load initial data - FIXED: This method doesn't exist, remove or create it
-        # self.load_dashboard_data()  # Remove this line
         
     def setup_menu_bar(self):
         """Setup the menu bar"""
@@ -265,6 +266,8 @@ class MainApplication(QMainWindow):
         
         # Create all module pages
         self.dashboard_page = self.create_dashboard_page()
+        self.bus_management_page = self.create_bus_management_page()
+        self.driver_management_page = self.create_driver_management_page()  # Add this line
         self.reports_page = self.create_reports_page()
         self.users_page = self.create_users_page()
         self.settings_page = self.create_settings_page()
@@ -273,6 +276,8 @@ class MainApplication(QMainWindow):
         
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.dashboard_page)
+        self.stacked_widget.addWidget(self.bus_management_page)
+        self.stacked_widget.addWidget(self.driver_management_page)  # Add this line
         self.stacked_widget.addWidget(self.reports_page)
         self.stacked_widget.addWidget(self.users_page)
         self.stacked_widget.addWidget(self.settings_page)
@@ -289,25 +294,7 @@ class MainApplication(QMainWindow):
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
-        """
-        # Welcome message
-        welcome_label = QLabel(f"Welcome, {self.username}!")
-        welcome_label.setFont(QFont("Arial", 20, QFont.Bold))
-        welcome_label.setStyleSheet("color: #2c3e50; margin-bottom: 10px;")
         
-        date_label = QLabel(datetime.datetime.now().strftime("%A, %B %d, %Y"))
-        date_label.setFont(QFont("Arial", 12))
-        date_label.setStyleSheet("color: #7f8c8d; margin-bottom: 20px;")
-        
-        layout.addWidget(welcome_label)
-        layout.addWidget(date_label)
-        
-        # Add separator
-        separator = QFrame()
-        separator.setFrameShape(QFrame.HLine)
-        separator.setFrameShadow(QFrame.Sunken)
-        layout.addWidget(separator)
-        """
         # Statistics section
         stats_label = QLabel("System Overview")
         stats_label.setFont(QFont("Arial", 16, QFont.Bold))
@@ -381,6 +368,16 @@ class MainApplication(QMainWindow):
         
         layout.addStretch()
         
+        return page
+        
+    def create_bus_management_page(self):
+        """Create bus management page"""
+        page = BusManagementPage()
+        return page
+        
+    def create_driver_management_page(self):
+        """Create driver management page"""
+        page = DriverManagementPage()
         return page
         
     def create_stat_card(self, title, value, color):
@@ -510,17 +507,27 @@ Quick Guide:
    - Monitor recent activities
    - Access quick actions
 
-2. REPORTS
+2. BUS MANAGEMENT
+   - Manage bus fleet
+   - Track insurance details
+   - Renew insurance policies
+
+3. DRIVER MANAGEMENT
+   - Manage driver details
+   - Track license expiry
+   - Process salary payments
+
+4. REPORTS
    - Generate various reports
    - Export to PDF/Excel
    - Schedule automatic reports
 
-3. SETTINGS
+5. SETTINGS
    - Configure system preferences
    - Manage database backups
    - Customize application settings
 
-4. USER MANAGEMENT
+6. USER MANAGEMENT
    - Add/Edit/Delete users
    - Assign roles and permissions
    - Reset user passwords
@@ -606,17 +613,19 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         # Switch to appropriate page
         module_map = {
             "Dashboard": 0,
-            "Reports": 1,
-            "Users": 2,
-            "Settings": 3,
-            "Help": 4
+            "Buses": 1,
+            "Drivers": 2,  # Add this line for Drivers
+            "Reports": 3,
+            "Users": 4,
+            "Settings": 5,
+            "Help": 6
         }
         
         if module in module_map:
             self.stacked_widget.setCurrentIndex(module_map[module])
         else:
             # Show placeholder for other modules
-            self.stacked_widget.setCurrentIndex(5)  # Placeholder page
+            self.stacked_widget.setCurrentIndex(7)  # Placeholder page (increased to 7)
             QMessageBox.information(self, "Coming Soon", 
                                   f"The {module} module is under development.")
             

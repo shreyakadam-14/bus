@@ -57,3 +57,18 @@ def insert_driver(name, dob, age, gender, phone, email):
 
     finally:
         conn.close()
+
+
+def fetch_all_drivers():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT driver_id, name, dob, age, gender, phone, email
+        FROM drivers
+        ORDER BY driver_id
+    """)
+
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
