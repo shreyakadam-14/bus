@@ -162,11 +162,7 @@ class SchoolManagementPage(QWidget):
         
         # Page header
         header_label = QLabel("🏫 School Management")
-<<<<<<< HEAD
         header_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
-=======
-        header_label.setFont(QFont("Arial", 20, QFont.Bold))
->>>>>>> origin/main
         header_label.setStyleSheet("color: #2c3e50;")
         main_layout.addWidget(header_label)
         
@@ -193,11 +189,7 @@ class SchoolManagementPage(QWidget):
         
         # Add status label at bottom
         self.status_label = QLabel("Ready")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         self.status_label.setStyleSheet("color: #7f8c8d;")
         main_layout.addWidget(self.status_label)
 
@@ -534,11 +526,7 @@ class SchoolFormTab(QWidget):
         
         # Form title
         self.form_title = QLabel("Add New School")
-<<<<<<< HEAD
         self.form_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
-=======
-        self.form_title.setFont(QFont("Arial", 16, QFont.Bold))
->>>>>>> origin/main
         layout.addWidget(self.form_title)
         
         # Create scroll area for long form
@@ -585,11 +573,7 @@ class SchoolFormTab(QWidget):
         
         # Status label
         self.status_label = QLabel("")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         layout.addWidget(self.status_label)
         
     def create_basic_info_tab(self):
@@ -892,6 +876,86 @@ class SchoolFormTab(QWidget):
         parent = self.parent().parent().parent()  # Get SchoolManagementPage
         if hasattr(parent, 'tab_widget'):
             parent.tab_widget.setCurrentIndex(0)  # Switch to list tab
+
+
+class SchoolDetailsDialog(QDialog):
+    """Dialog to display school details"""
+    
+    def __init__(self, school_data, parent=None):
+        super().__init__(parent)
+        self.school_data = school_data
+        self.setWindowTitle(f"School Details - {school_data['name']}")
+        self.setGeometry(100, 100, 700, 600)
+        self.init_ui()
+        
+    def init_ui(self):
+        """Initialize the UI"""
+        layout = QVBoxLayout(self)
+        
+        # School information display
+        info_text = f"""
+        <b>School Name:</b> {self.school_data['name']}<br>
+        <b>School Code:</b> {self.school_data['school_code']}<br>
+        <b>Type:</b> {self.school_data['type']}<br>
+        <b>Address:</b> {self.school_data['address']}<br>
+        <b>City:</b> {self.school_data['city']}<br>
+        <b>Phone:</b> {self.school_data['phone']}<br>
+        <b>Email:</b> {self.school_data['email']}<br>
+        <b>Principal:</b> {self.school_data['principal_name']}<br>
+        <b>Contact Person:</b> {self.school_data['contact_person']}<br>
+        <b>Contact Phone:</b> {self.school_data['contact_person_phone']}<br>
+        <b>Student Count:</b> {self.school_data['student_count']}<br>
+        <b>Contract Status:</b> {self.school_data['contract_status']}<br>
+        <b>Monthly Fee:</b> ₹ {self.school_data['monthly_fee']:,}<br>
+        <b>Payment Status:</b> {self.school_data['payment_status']}<br>
+        <b>Assigned Buses:</b> {', '.join(self.school_data['assigned_buses']) or 'None'}<br>
+        <b>GST Number:</b> {self.school_data['gst_number']}
+        """
+        
+        info_label = QLabel(info_text)
+        info_label.setWordWrap(True)
+        layout.addWidget(info_label)
+        
+        # Close button
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(self.accept)
+        layout.addWidget(close_btn)
+
+
+class ContractDetailsDialog(QDialog):
+    """Dialog to display contract details"""
+    
+    def __init__(self, school_data, parent=None):
+        super().__init__(parent)
+        self.school_data = school_data
+        self.setWindowTitle(f"Contract Details - {school_data['name']}")
+        self.setGeometry(100, 100, 700, 600)
+        self.init_ui()
+        
+    def init_ui(self):
+        """Initialize the UI"""
+        layout = QVBoxLayout(self)
+        
+        # Contract information display
+        contract_text = f"""
+        <b>School Name:</b> {self.school_data['name']}<br>
+        <b>Contract Status:</b> {self.school_data['contract_status']}<br>
+        <b>Contract Start Date:</b> {self.school_data['contract_start']}<br>
+        <b>Contract End Date:</b> {self.school_data['contract_end']}<br>
+        <b>Monthly Fee:</b> ₹ {self.school_data['monthly_fee']:,}<br>
+        <b>Payment Status:</b> {self.school_data['payment_status']}<br>
+        <b>Billing Address:</b> {self.school_data['billing_address']}<br>
+        <b>GST Number:</b> {self.school_data['gst_number']}
+        """
+        
+        contract_label = QLabel(contract_text)
+        contract_label.setWordWrap(True)
+        layout.addWidget(contract_label)
+        
+        # Close button
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(self.accept)
+        layout.addWidget(close_btn)
 
 
 class SchoolBusAssignmentTab(QWidget):

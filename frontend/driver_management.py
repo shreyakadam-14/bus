@@ -127,11 +127,7 @@ class DriverManagementPage(QWidget):
         
         # Page header
         header_label = QLabel("👨‍✈️ Driver Management")
-<<<<<<< HEAD
         header_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
-=======
-        header_label.setFont(QFont("Arial", 20, QFont.Bold))
->>>>>>> origin/main
         header_label.setStyleSheet("color: #2c3e50;")
         main_layout.addWidget(header_label)
         
@@ -156,11 +152,7 @@ class DriverManagementPage(QWidget):
         
         # Add status label at bottom
         self.status_label = QLabel("Ready")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         self.status_label.setStyleSheet("color: #7f8c8d;")
         main_layout.addWidget(self.status_label)
 
@@ -474,11 +466,7 @@ class DriverFormTab(QWidget):
         
         # Form title
         self.form_title = QLabel("Add New Driver")
-<<<<<<< HEAD
         self.form_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
-=======
-        self.form_title.setFont(QFont("Arial", 16, QFont.Bold))
->>>>>>> origin/main
         layout.addWidget(self.form_title)
         
         # Create tab widget for form sections
@@ -517,11 +505,7 @@ class DriverFormTab(QWidget):
         
         # Status label
         self.status_label = QLabel("")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         layout.addWidget(self.status_label)
         
     def create_personal_info_tab(self):

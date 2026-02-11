@@ -105,11 +105,7 @@ class BusManagementPage(QWidget):
         
         # Page header
         header_label = QLabel("🚌 Bus Management")
-<<<<<<< HEAD
         header_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
-=======
-        header_label.setFont(QFont("Arial", 20, QFont.Bold))
->>>>>>> origin/main
         header_label.setStyleSheet("color: #2c3e50;")
         main_layout.addWidget(header_label)
         
@@ -138,11 +134,7 @@ class BusManagementPage(QWidget):
         
         # Add status label at bottom
         self.status_label = QLabel("Ready")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         self.status_label.setStyleSheet("color: #7f8c8d;")
         main_layout.addWidget(self.status_label)
 
@@ -424,11 +416,7 @@ class BusFormTab(QWidget):
         
         # Form title
         self.form_title = QLabel("Add New Bus")
-<<<<<<< HEAD
         self.form_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
-=======
-        self.form_title.setFont(QFont("Arial", 16, QFont.Bold))
->>>>>>> origin/main
         layout.addWidget(self.form_title)
         
         # Create tab widget for form sections
@@ -459,11 +447,7 @@ class BusFormTab(QWidget):
         
         # Status label
         self.status_label = QLabel("")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         layout.addWidget(self.status_label)
         
     def create_basic_info_tab(self):
@@ -792,21 +776,13 @@ class InsuranceTrackerTab(QWidget):
         
         # Value
         value_label = QLabel(str(value))
-<<<<<<< HEAD
         value_label.setFont(QFont("Segoe UI", 24, QFont.Bold))
-=======
-        value_label.setFont(QFont("Arial", 24, QFont.Bold))
->>>>>>> origin/main
         value_label.setAlignment(Qt.AlignCenter)
         value_label.setStyleSheet(f"color: rgb({color.red()}, {color.green()}, {color.blue()});")
         
         # Title
         title_label = QLabel(title)
-<<<<<<< HEAD
         title_label.setFont(QFont("Segoe UI", 11))
-=======
-        title_label.setFont(QFont("Arial", 11))
->>>>>>> origin/main
         title_label.setAlignment(Qt.AlignCenter)
         
         layout.addWidget(value_label)
@@ -923,11 +899,7 @@ class InsuranceRenewalTab(QWidget):
         
         # Title
         self.renewal_title = QLabel("Renew Insurance")
-<<<<<<< HEAD
         self.renewal_title.setFont(QFont("Segoe UI", 16, QFont.Bold))
-=======
-        self.renewal_title.setFont(QFont("Arial", 16, QFont.Bold))
->>>>>>> origin/main
         layout.addWidget(self.renewal_title)
         
         # Bus selection (if not loaded from list)
@@ -1037,11 +1009,7 @@ class InsuranceRenewalTab(QWidget):
         
         # Status label
         self.status_label = QLabel("")
-<<<<<<< HEAD
         self.status_label.setFont(QFont("Segoe UI", 9))
-=======
-        self.status_label.setFont(QFont("Arial", 9))
->>>>>>> origin/main
         layout.addWidget(self.status_label)
         
         # Load first bus by default
@@ -1114,21 +1082,13 @@ class BusDetailsDialog(QDialog):
         
         # Title
         title = QLabel(f"🚌 {self.bus_data['registration_number']}")
-<<<<<<< HEAD
         title.setFont(QFont("Segoe UI", 18, QFont.Bold))
-=======
-        title.setFont(QFont("Arial", 18, QFont.Bold))
->>>>>>> origin/main
         title.setAlignment(Qt.AlignCenter)
         layout.addWidget(title)
         
         # Subtitle
         subtitle = QLabel(f"{self.bus_data['bus_number']} - {self.bus_data['model']}")
-<<<<<<< HEAD
         subtitle.setFont(QFont("Segoe UI", 12))
-=======
-        subtitle.setFont(QFont("Arial", 12))
->>>>>>> origin/main
         subtitle.setAlignment(Qt.AlignCenter)
         layout.addWidget(subtitle)
         
@@ -1166,11 +1126,7 @@ class BusDetailsDialog(QDialog):
         for label, value in details:
             if label:  # Skip empty rows
                 value_label = QLabel(value)
-<<<<<<< HEAD
                 value_label.setFont(QFont("Segoe UI", 10))
-=======
-                value_label.setFont(QFont("Arial", 10))
->>>>>>> origin/main
                 form_layout.addRow(f"{label}:", value_label)
             else:
                 form_layout.addRow(QLabel(""), QLabel(""))
