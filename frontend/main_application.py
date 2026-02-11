@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt, QTimer, QDate
 import datetime
 import sys
 
+<<<<<<< HEAD
 # Import integrated modules
 from bus_management import BusManagementPage
 from driver_management import DriverManagementPage
@@ -19,6 +20,11 @@ from school_management import SchoolManagementPage
 from reports_dashboard import ReportsDashboard  # Integrated reports dashboard
 from system_admin import UserManagement
 from system_settings import SystemSettings
+=======
+# Import the management modules
+from bus_management import BusManagementPage  # Add this line
+from driver_management import DriverManagementPage  # Add this line
+>>>>>>> origin/main
 
 class MainApplication(QMainWindow):
     """
@@ -280,23 +286,38 @@ class MainApplication(QMainWindow):
         
         # Create all module pages
         self.dashboard_page = self.create_dashboard_page()
+<<<<<<< HEAD
         self.bus_management_page = BusManagementPage()
         self.driver_management_page = DriverManagementPage()
         self.school_management_page = SchoolManagementPage()
         self.reports_dashboard_page = ReportsDashboard()  # Integrated reports dashboard
         self.user_management_page = UserManagement()
         self.system_settings_page = SystemSettings()
+=======
+        self.bus_management_page = self.create_bus_management_page()
+        self.driver_management_page = self.create_driver_management_page()  # Add this line
+        self.reports_page = self.create_reports_page()
+        self.users_page = self.create_users_page()
+        self.settings_page = self.create_settings_page()
+>>>>>>> origin/main
         self.help_page = self.create_help_page()
         self.placeholder_page = self.create_placeholder_page()
         
         # Add pages to stacked widget
         self.stacked_widget.addWidget(self.dashboard_page)
         self.stacked_widget.addWidget(self.bus_management_page)
+<<<<<<< HEAD
         self.stacked_widget.addWidget(self.driver_management_page)
         self.stacked_widget.addWidget(self.school_management_page)
         self.stacked_widget.addWidget(self.reports_dashboard_page)
         self.stacked_widget.addWidget(self.user_management_page)
         self.stacked_widget.addWidget(self.system_settings_page)
+=======
+        self.stacked_widget.addWidget(self.driver_management_page)  # Add this line
+        self.stacked_widget.addWidget(self.reports_page)
+        self.stacked_widget.addWidget(self.users_page)
+        self.stacked_widget.addWidget(self.settings_page)
+>>>>>>> origin/main
         self.stacked_widget.addWidget(self.help_page)
         self.stacked_widget.addWidget(self.placeholder_page)
         
@@ -316,12 +337,15 @@ class MainApplication(QMainWindow):
         page.setMinimumSize(1000, 600)
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
+<<<<<<< HEAD
         
         """# Welcome section
         welcome_label = QLabel(f"Welcome, {self.username}!")
         welcome_label.setFont(QFont("Segoe UI", 20, QFont.Bold))
         welcome_label.setStyleSheet("color: #2c3e50; margin-bottom: 20px;")
         layout.addWidget(welcome_label)"""
+=======
+>>>>>>> origin/main
         
         # Statistics section
         stats_label = QLabel("System Overview")
@@ -405,6 +429,16 @@ class MainApplication(QMainWindow):
         
         return page
         
+    def create_bus_management_page(self):
+        """Create bus management page"""
+        page = BusManagementPage()
+        return page
+        
+    def create_driver_management_page(self):
+        """Create driver management page"""
+        page = DriverManagementPage()
+        return page
+        
     def create_stat_card(self, title, value, color):
         """Create a statistics card"""
         card = QFrame()
@@ -465,6 +499,7 @@ Quick Guide:
    - Quick access to modules
 
 2. BUS MANAGEMENT
+<<<<<<< HEAD
    - Add/Edit/Delete buses
    - Track insurance status
    - Manage bus details
@@ -492,6 +527,31 @@ Quick Guide:
 
 User Permissions:
 - {self.user_role}: {self.get_role_permissions()}
+=======
+   - Manage bus fleet
+   - Track insurance details
+   - Renew insurance policies
+
+3. DRIVER MANAGEMENT
+   - Manage driver details
+   - Track license expiry
+   - Process salary payments
+
+4. REPORTS
+   - Generate various reports
+   - Export to PDF/Excel
+   - Schedule automatic reports
+
+5. SETTINGS
+   - Configure system preferences
+   - Manage database backups
+   - Customize application settings
+
+6. USER MANAGEMENT
+   - Add/Edit/Delete users
+   - Assign roles and permissions
+   - Reset user passwords
+>>>>>>> origin/main
 
 Need Help?
 - Check the user guide for detailed instructions
@@ -608,19 +668,31 @@ Hours: 9:00 AM - 6:00 PM (Monday to Friday)
         module_map = {
             "Dashboard": 0,
             "Buses": 1,
+<<<<<<< HEAD
             "Drivers": 2,
             "Schools": 3,
             "Reports": 4,  # Integrated reports dashboard
             "User Management": 5,
             "System Settings": 6,
             "Help": 7
+=======
+            "Drivers": 2,  # Add this line for Drivers
+            "Reports": 3,
+            "Users": 4,
+            "Settings": 5,
+            "Help": 6
+>>>>>>> origin/main
         }
         
         if module in module_map:
             self.stacked_widget.setCurrentIndex(module_map[module])
         else:
             # Show placeholder for other modules
+<<<<<<< HEAD
             self.stacked_widget.setCurrentIndex(8)  # Placeholder page
+=======
+            self.stacked_widget.setCurrentIndex(7)  # Placeholder page (increased to 7)
+>>>>>>> origin/main
             QMessageBox.information(self, "Coming Soon", 
                                   f"The {module} module is under development.")
             
